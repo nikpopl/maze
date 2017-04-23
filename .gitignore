@@ -1,6 +1,6 @@
-#include TXLib.h
+#include "TXLib.h"
 
-void drawLabirint()
+void drawLabirint(int key)
 {
     txSetFillColour(RGB(50, 50, 50));
     txClear();
@@ -29,11 +29,39 @@ void drawLabirint()
     txLine(400,560,400,560);
 
 
+    txSetColour(RGB(210,145,32),5);
+    txSetFillColour(RGB(22,145,32));
+    txLine(92,71,120,71);
+    txLine(170,152,223,152);
+    txLine(320,51,373,119);
+    txLine(175,164,297,251);
+    txLine(53,248,32,300);
+    txLine(27,251,28,295);
+    txLine(370,357,396,406);
+    txLine(306,495,328,570);
+
+
+
+
+    txSetColour(RGB(255,255,0),5);
+    txSetFillColour(RGB(255,255,0));
+    txCircle(45,200,7);
+
+    txSetColour(RGB(128,0,0),5);
+    txSetFillColour(RGB(128,0,0));
+    if (key == 0) {
+        txLine(330,450,390,450);
+    } else {
+        txLine(330,450,330,480);
+    }
+
+
 }
 
-void numberTextOut(int x, int y, int number) {
-    char s[20] = ;
-    sprintf(s, %d, number);
+void numberTextOut(int x, int y, int number)
+{
+    char s[20] = "";
+    sprintf(s, "%d", number);
     txTextOut(x, y, s);
 }
 
@@ -42,6 +70,7 @@ void numberTextOut(int x, int y, int number) {
 
 void drawSnowman(int x, int y)
 {
+
     txSetColor(TX_WHITE);
     txSetFillColor(TX_WHITE);
     txCircle(x + 0, y - 10, 10);
@@ -60,45 +89,75 @@ void drawSnowman(int x, int y)
     txFloodFill(x - 1, y - 27);
 }
 
-void moveSnowman(int x, int y, int speed)
+void moveSnowman(int *x, int *y, int speed, int *key)
 {
+    int predX = *x;
+    int predY = *y;
 
     if (GetAsyncKeyState('W'))
     {
-        y = y - speed;
+        *y = *y - speed;
     }
 
     if (GetAsyncKeyState('S'))
     {
-        y = y + speed;
+        *y = *y + speed;
     }
 
     if (GetAsyncKeyState('D'))
     {
-        x = x + speed;
+        *x = *x + speed;
     }
 
     if (GetAsyncKeyState('A'))
     {
-        x = x - speed;
+        *x = *x - speed;
     }
 
 
 
-    if (txGetPixel(x, y) == RGB(0, 0, 255)) {
-        x = 30;
-        y = 50;
+    if (txGetPixel(*x, *y) == RGB(0, 0, 255))
+    {
+        *x = predX;
+        *y = predY;
 
     }
 
-     if (txGetPixel(x, y) == RGB(0, 255, 0)) {
-
-     txMessageBox(You winТы победил);
-        x = 3000;
-        y = 5000;
+    if (txGetPixel(*x, *y) == RGB(210,145,32))
+    {
+        txMessageBox("На начало");
+        *x = 30;
+        *y = 50;
+        *key = 0;
 
 
     }
+
+    if (txGetPixel(*x, *y) == RGB(0, 255, 0))
+    {
+
+        txMessageBox("You win/Ты победил");
+        *x = 3000;
+        *y = 5000;
+
+
+    }
+    if (txGetPixel(*x, *y) == RGB(128, 0, 0))
+    {
+        *x = predX;
+        *y = predY;
+
+    }
+
+    if (txGetPixel(*x, *y) == RGB(255, 255, 0))
+    {
+        *key = 1;
+        txMessageBox("Дверь открыта");
+        *x = 55;
+        *y = 200;
+
+    }
+
 }
 
 
@@ -109,32 +168,34 @@ int main()
     txCreateWindow(430, 600);
     txBegin();
 
-    drawLabirint();
-
     int snowmanX = 50;
     int snowmanY = 30;
+    int snowmanKey = 0;
 
     int speed = 3;
 
     while (1)
     {
-        drawLabirint();
+        drawLabirint(snowmanKey);
 
-        moveSnowman(&snowmanX, &snowmanY, speed);
+        moveSnowman(&snowmanX, &snowmanY, speed, &snowmanKey);
 
         drawSnowman(snowmanX, snowmanY);
 
-        if (!GetAsyncKeyState('P') or !GetAsyncKeyState('M')) {
+        if (!GetAsyncKeyState('P') or !GetAsyncKeyState('M'))
+        {
             txSetColour(TX_BLACK, 1000);
             txSetFillColour(TX_NULL);
             txCircle (snowmanX, snowmanY, 550);
         }
 
-        if (GetAsyncKeyState(VK_UP) && speed  7) {
+        if (GetAsyncKeyState(VK_UP) && speed < 7)
+        {
             speed = speed + 1;
             txSleep(100);
         }
-        if (GetAsyncKeyState(VK_DOWN) && speed  0) {
+        if (GetAsyncKeyState(VK_DOWN) && speed > 0)
+        {
             speed = speed - 1;
             txSleep(100);
         }
@@ -142,7 +203,9 @@ int main()
         txSetColor(RGB(0, 255, 0));
         numberTextOut(10, 10, speed);
         txSleep(1);
+
     }
 }
 
 
+// 1.2
