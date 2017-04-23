@@ -1,29 +1,148 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+#include TXLib.h
 
-# Precompiled Headers
-*.gch
-*.pch
+void drawLabirint()
+{
+    txSetFillColour(RGB(50, 50, 50));
+    txClear();
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+    txSetColour(RGB(0, 0, 255), 10);
+    txSetFillColour(RGB(0, 0, 255));
+    txLine(0,157,316,157);
+    txLine(147,63,147,300);
+    txLine(235,63,235,300);
+    txLine(81,159,131,446);
+    txLine(131,446,154,523);
+    txLine(154,523,175,446);
+    txLine(175,446,216,443);
+    txLine(425,0,425,600);
+    txLine(178,353,439,305);
+    txLine(181,600,277,453);
+    txLine(277,453,326,451);
+    txLine(381,454,422,453);
+    txLine(0,0,600,0);
+    txLine(0,0,0,600);
+    txLine(0,600,430,600);
 
-# Fortran module files
-*.mod
-*.smod
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+    txSetColour(RGB(0, 255, 0), 30);
+    txSetFillColour(RGB(0, 255, 0));
+    txLine(400,560,400,560);
 
-# Executables
-*.exe
-*.out
-*.app
+
+}
+
+void numberTextOut(int x, int y, int number) {
+    char s[20] = ;
+    sprintf(s, %d, number);
+    txTextOut(x, y, s);
+}
+
+
+
+
+void drawSnowman(int x, int y)
+{
+    txSetColor(TX_WHITE);
+    txSetFillColor(TX_WHITE);
+    txCircle(x + 0, y - 10, 10);
+    txCircle(x + 0, y - 25, 7);
+
+    txSetColor(TX_BLACK);
+    txSetFillColor(TX_BLACK);
+    txCircle(x + 1, y - 29, 1);
+    txCircle(x - 2, y - 29,1);
+
+    txSetColor(TX_ORANGE);
+    txSetFillColor(TX_ORANGE);
+    txLine(x + 0,  y - 28, x - 3, y - 27);
+    txLine(x - 3, y - 27, x - 0,  y -            26);
+    txLine(x + 0,  y - 26, x - 0,  y - 28);
+    txFloodFill(x - 1, y - 27);
+}
+
+void moveSnowman(int x, int y, int speed)
+{
+
+    if (GetAsyncKeyState('W'))
+    {
+        y = y - speed;
+    }
+
+    if (GetAsyncKeyState('S'))
+    {
+        y = y + speed;
+    }
+
+    if (GetAsyncKeyState('D'))
+    {
+        x = x + speed;
+    }
+
+    if (GetAsyncKeyState('A'))
+    {
+        x = x - speed;
+    }
+
+
+
+    if (txGetPixel(x, y) == RGB(0, 0, 255)) {
+        x = 30;
+        y = 50;
+
+    }
+
+     if (txGetPixel(x, y) == RGB(0, 255, 0)) {
+
+     txMessageBox(You winТы победил);
+        x = 3000;
+        y = 5000;
+
+
+    }
+}
+
+
+
+
+int main()
+{
+    txCreateWindow(430, 600);
+    txBegin();
+
+    drawLabirint();
+
+    int snowmanX = 50;
+    int snowmanY = 30;
+
+    int speed = 3;
+
+    while (1)
+    {
+        drawLabirint();
+
+        moveSnowman(&snowmanX, &snowmanY, speed);
+
+        drawSnowman(snowmanX, snowmanY);
+
+        if (!GetAsyncKeyState('P') or !GetAsyncKeyState('M')) {
+            txSetColour(TX_BLACK, 1000);
+            txSetFillColour(TX_NULL);
+            txCircle (snowmanX, snowmanY, 550);
+        }
+
+        if (GetAsyncKeyState(VK_UP) && speed  7) {
+            speed = speed + 1;
+            txSleep(100);
+        }
+        if (GetAsyncKeyState(VK_DOWN) && speed  0) {
+            speed = speed - 1;
+            txSleep(100);
+        }
+
+        txSetColor(RGB(0, 255, 0));
+        numberTextOut(10, 10, speed);
+        txSleep(1);
+    }
+}
+
+
